@@ -30,7 +30,7 @@
         <button @click="signOutm()">sign out</button>
     </div>
 </template>
-<style>
+<style scoped>
     .login__header {
         margin-bottom: 5rem;
     }
