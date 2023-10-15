@@ -1,21 +1,35 @@
 import { defineStore } from 'pinia'
+import axios from 'axios'
 
 export const useGlobalStore = defineStore('global', {
   state: () => ({
-    count: 0,
     username: null,
-    uid: null
+    uid: null,
   }),
   getters: {
-    doubleCount: (state) => state.count * 2,
   },
   actions: {
     setUsername(username, uid) {
       this.username = username
       this.uid = uid
     },
-    increment() {
-      this.count++
-    },
+    async createAccount(username, email, password) {
+      const { data: response } = await axios.post(`api/user/createUser`, {
+        username,
+        password,
+        email,
+      })
+
+      sessionStorage.setItem(
+        'userInfo',
+        JSON.stringify({
+          username: response.username,
+          email: response.email,
+          uid: response.uid,
+        })
+      )
+
+      this.setUsername(response.username, response.uid)
+    }
   },
 })

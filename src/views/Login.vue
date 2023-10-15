@@ -3,12 +3,19 @@
     import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
     import { mapActions } from 'pinia';
     import { useGlobalStore } from '../stores/globalStore';
+    import SignIn from '../components/SignIn.vue';
+    import SignUp from '../components/SignUp.vue';
 
     const provider = new GoogleAuthProvider();
 
     export default {
+    components: {
+        SignIn,
+        SignUp
+    },
     data() {
         return {
+            signView: 'SignIn',
             username: null,
             password: null,
         }
@@ -24,7 +31,7 @@
                     const user = result.user;
                     // IdP data available using getAdditionalUserInfo(result)
                     // ...
-                    console.log({result, token})
+                    localStorage.setItem("uid", result.user.uid);
                     this.setUsername(result.user.displayName, result.user.uid)
                     this.$router.push('/Dashboard');
                 }).catch((error) => {
@@ -37,6 +44,9 @@
                     const credential = GoogleAuthProvider.credentialFromError(error);
                     // ...
                 });
+        },
+        setLoginView(view) {
+            this.signView = view;
         },
         ...mapActions(useGlobalStore, ['setUsername'])
     },
@@ -59,26 +69,20 @@
                 </div>
             </div>
             <div class="login__data">
-                <div class="data__header">
-                    <h1>
-                        Login Account
-                    </h1>
-                </div>
-                <div class="userdata__container">
-                    <input class="data__input" type="text" placeholder="Username / Email" v-model="username">
-                </div>
-                <div class="userdata__container">
-                    <input class="data__input" type="text" placeholder="Password" v-model="password">
-                </div>
-
-                <div class="login__submit">
-                    <button @click="loginEmailAndPassword()">Login</button>
-                </div>
-
-                <h5>Or authenticate using your google account</h5>
-
-                <div class="login__google__provider">
-                    <img src="../assets/logos/pngwing.com.png" width="30" alt="google-logo" @click="loginWithGoogleProvider()">
+                <component :is="signView"></component>
+                <div class="login__view__switcher">
+                    <h3
+                        :class="{ active: signView === 'SignIn'}"
+                        @click="setLoginView('SignIn')"
+                    >
+                        Sign In
+                    </h3>
+                    <h3
+                        :class="{ active: signView === 'SignUp'}"
+                        @click="setLoginView('SignUp')"
+                    >
+                        Sign Up
+                    </h3>
                 </div>
             </div>
         </div>
@@ -129,45 +133,32 @@
                 }
             }
             .login__data {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+                background-color: rgb(255 255 255 / 0.1);
                 backdrop-filter: blur(20px);
                 background-blend-mode: overlay;
                 border-radius: 0px 30px 30px 0px;
-                padding: 3rem;
+                padding: 2rem 3rem;
                 flex: 1;
-                color: white;
-                .data__header {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                .login__view__switcher {
+                    color: white;
+                    width: 60%;
                     margin-top: 2rem;
-                    margin-bottom: 5rem;
-                }
-                .userdata__container {
+                    align-self: center;
+                    justify-content: space-around;
                     display: flex;
-                    width: 100%;
-                    .data__input {
-                        background-color: rgb(250, 250, 250);
-                        width: 100%;
-                        box-sizing: border-box;
-                        border: none;
-                        border-left: 5px solid black;
-                        font-size: 16px;
-                        padding: 12px 10px 12px 10px;
-                        margin-bottom: 2rem;
+                    cursor: pointer;
+                    .active {
+                        border-bottom: solid 1px white;
                     }
-                }
-                .login__submit {
-                    button {
-                        background-color: white; /* Green */
-                        border: none;
-                        border-radius: 30px;
-                        color: black;
-                        padding: 15px 32px;
-                        text-align: center;
-                        text-decoration: none;
-                        display: inline-block;
-                        font-size: 16px;
+                    h3 {
+                        &:active {
+                            font-size: 20px;
+                        }
                     }
+
                 }
             }
         }
