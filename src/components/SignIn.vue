@@ -11,6 +11,7 @@
         return {
             username: null,
             password: null,
+            loginStatus: null
         }
     },
     methods: {
@@ -38,7 +39,16 @@
                     // ...
                 });
         },
-        ...mapActions(useGlobalStore, ['setUsername'])
+        async loginEmailAndPassword() {
+            if (this.username && this.password) {
+                this.loginStatus = await this.loginUser(this.username, this.password)
+            }
+            if (this.loginStatus === 'success') {
+                console.log('12345')
+                this.$router.push({ path: '/Dashboard' })
+            }
+        },
+        ...mapActions(useGlobalStore, ['setUsername', 'loginUser'])
     },
 }
 </script>
