@@ -26,13 +26,17 @@ export const useGlobalStore = defineStore('global', {
       const saltRounds = 10;
       const hashPassword = await bcrypt.hash(password, saltRounds)
 
-      const { data: response } = await axios.post(`api/user/createUser`, {
+      const {data} = await axios.post(`api/user/createUser`, {
         username,
         password: hashPassword,
         email,
       })
 
-      this.setUserInfo(response.username, response.uid, response.email)
+      if (data.status === 'success') {
+        const payload = await jose.decodeJwt(data.token)
+        this.setUserInfo(payload.username, payload.uid, payload.email);
+        this.$router.push('/Dashboard');
+      }
     },
     async loginUser(email, password) {
       try {
@@ -42,17 +46,42 @@ export const useGlobalStore = defineStore('global', {
         .sign(secret)
       
         const { data } = await axios.get(`api/user/login?token=${token}`);
-  
+
         if (data.token) {
-          localStorage.setItem('token', data.token);
+          localStorage.setItem('DSauthToken', data.token);
         }
         
         if (data.status === 'success') {
           const payload = await jose.decodeJwt(data.token)
           this.setUserInfo(payload.username, payload.uid, payload.email);
+          this.$router.push('/Dashboard');
         }
   
-        return data.status;
+        return data;
+      } catch (error) {
+        return 'failed';
+      }
+    },
+    async loginUserProvider(token, uid) {
+      try {      
+        const { data } = await axios.get(`api/user/loginProvider`, {
+          headers: {
+            Authorization: token,
+            uid
+          }
+        });
+
+        if (data.token) {
+          localStorage.setItem('DSauthToken', data.token);
+        }
+        
+        if (data.status === 'success') {
+          const payload = await jose.decodeJwt(data.token)
+          this.setUserInfo(payload.username, payload.uid, payload.email);
+          this.$router.push('/Dashboard');
+        }
+  
+        return data;
       } catch (error) {
         return 'failed';
       }

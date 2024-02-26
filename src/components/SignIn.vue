@@ -11,7 +11,12 @@
         return {
             username: null,
             password: null,
-            loginStatus: null
+            loginStatus: null,
+            error: null,
+            errorMessages: {
+                401: 'password provided is wrong',
+                404: 'user not found'
+            }
         }
     },
     methods: {
@@ -20,15 +25,9 @@
                 .then((result) => {
                     // This gives you a Google Access Token. You can use it to access the Google API.
                     const credential = GoogleAuthProvider.credentialFromResult(result);
-                    const token = credential.accessToken;
-                    // The signed-in user info.
-                    const user = result.user;
-                    // IdP data available using getAdditionalUserInfo(result)
-                    // ...
-                    localStorage.setItem("uid", result.user.uid);
-                    this.setUsername(result.user.displayName, result.user.uid)
-                    this.$router.push('/Dashboard');
+                    this.loginUserProvider(credential.idToken, result.user.uid);
                 }).catch((error) => {
+                    console.log(error)
                     // Handle Errors here.
                     const errorCode = error.code;
                     const errorMessage = error.message;
@@ -43,13 +42,26 @@
             if (this.username && this.password) {
                 this.loginStatus = await this.loginUser(this.username, this.password)
             }
-            if (this.loginStatus === 'success') {
-                console.log('12345')
-                this.$router.push({ path: '/Dashboard' })
+
+            if (this.loginStatus.status !== 'success') {
+                this.error = true;
             }
         },
-        ...mapActions(useGlobalStore, ['setUsername', 'loginUser'])
+        ...mapActions(useGlobalStore, ['setUsername', 'loginUser', 'loginUserProvider'])
     },
+    watch: {
+        username: {
+            handler() {
+                this.error = false
+            }
+        },
+        password: {
+            handler() {
+                this.error = false
+            }
+        }
+
+    }
 }
 </script>
 
@@ -65,6 +77,9 @@
         </div>
         <div class="userdata__container">
             <input class="data__input" type="text" placeholder="Password" v-model="password">
+        </div>
+        <div v-if="this.error" class="error__container">
+            <h5> {{ errorMessages[loginStatus.code] }}</h5>
         </div>
         <div class="login__submit">
             <button @click="loginEmailAndPassword()">Login</button>

@@ -25,10 +25,6 @@ import { routerKey } from 'vue-router';
             } else {
                 this.creationError = 'All the fields should be filled';
             }
-
-            if (isAuthenticated) {
-                this.$router.push('/Dashboard')
-            }
         },
         ...mapActions(useGlobalStore, ['setUsername', 'createAccount'])
     },
