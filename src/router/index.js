@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Home from '../views/Home.vue'
+import newDashboard from '../views/newDashboard.vue'
 import { isAuthenticated } from '../authentication/Authentication'
 
 const router = createRouter({
@@ -20,7 +21,7 @@ const router = createRouter({
     {
       path: '/Dashboard',
       name: 'dashboard',
-      component: Dashboard,
+      component: newDashboard,
       beforeEnter: isAuthenticated,
     },
   ]

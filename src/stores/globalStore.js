@@ -87,4 +87,5 @@ export const useGlobalStore = defineStore('global', {
       }
     }
   },
+  persist: true,
 })
