@@ -1,6 +1,6 @@
 <script>
     import { auth } from '../firebase/firebase';
-    import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+    import { GoogleAuthProvider, getRedirectResult, signInWithRedirect } from "firebase/auth";
     import { mapActions } from 'pinia';
     import { useGlobalStore } from '../stores/globalStore';
 
@@ -19,24 +19,16 @@
             }
         }
     },
+    async mounted() {
+        const result = await getRedirectResult(auth);
+        if (result) {
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            this.loginUserProvider(credential.idToken, result.user.uid);
+        }
+    },
     methods: {
-        loginWithGoogleProvider() {
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    // This gives you a Google Access Token. You can use it to access the Google API.
-                    const credential = GoogleAuthProvider.credentialFromResult(result);
-                    this.loginUserProvider(credential.idToken, result.user.uid);
-                }).catch((error) => {
-                    console.log(error)
-                    // Handle Errors here.
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    // The email of the user's account used.
-                    const email = error.customData.email;
-                    // The AuthCredential type that was used.
-                    const credential = GoogleAuthProvider.credentialFromError(error);
-                    // ...
-                });
+        async loginWithGoogleProvider() {
+            await signInWithRedirect(auth, provider);
         },
         async loginEmailAndPassword() {
             if (this.username && this.password) {
