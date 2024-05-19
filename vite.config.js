@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import dotenv from 'dotenv'
+import { VitePWA } from 'vite-plugin-pwa'
 
 dotenv.config()
 
@@ -10,6 +11,7 @@ dotenv.config()
 export default defineConfig({
   plugins: [
     vue(),
+    VitePWA({registerType: 'autoUpdate'})
   ],
   resolve: {
     alias: {
