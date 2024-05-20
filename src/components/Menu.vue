@@ -33,10 +33,10 @@
 #sidemenu {
     margin-right: 1rem;
 	nav {
-		width: 140px;
+		width: 235px;
 		background: rgb(0, 128, 255);
 		position: fixed;
-		top: 4rem;
+		top: 3rem;
 		right: 0;
 		z-index: 99;
 
@@ -44,8 +44,8 @@
 	.sidemenu {
 		&__btn {
 			display: block;
-			width: 40px;
-			height: 40px;
+			width: 30px;
+			height: 30px;
 			background: white;
             border-radius: 10px;
 			border: none;
@@ -57,7 +57,7 @@
 
 			span {
 				display: block;
-				width: 20px;
+				width: 18px;
 				height: 3px;
 				margin: auto;
 				background: rgb(0, 128, 255);
@@ -106,8 +106,10 @@
 			a {
         text-decoration: none;
 				line-height: 1.6em;
-				font-size: 1.6em;
+				font-size: 1.2em;
+				font-weight: 400;
 				padding: .5em;
+				padding-left: 1em;
 				display: block;
 				color: white;
 				transition: .4s ease;

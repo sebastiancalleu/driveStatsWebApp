@@ -68,7 +68,6 @@
         height: 90%;
         .body__main {
             width: 100%;
-            padding: 3rem;
         }
     }
 }

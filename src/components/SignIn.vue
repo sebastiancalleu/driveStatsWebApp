@@ -19,8 +19,9 @@
             }
         }
     },
-    async mounted() {
+    async created() {
         const result = await getRedirectResult(auth);
+        console.log(result)
         if (result) {
             const credential = GoogleAuthProvider.credentialFromResult(result);
             this.loginUserProvider(credential.idToken, result.user.uid);

@@ -1,6 +1,6 @@
 <script>
     import { auth } from '../firebase/firebase';
-    import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+    import { GoogleAuthProvider, getRedirectResult } from "firebase/auth";
     import { mapActions } from 'pinia';
     import { useGlobalStore } from '../stores/globalStore';
     import SignIn from '../components/SignIn.vue';
@@ -20,7 +20,7 @@
             password: null,
         }
     },
-    created() {
+    async mounted() {
         this.validateSession();
     },
     methods: {

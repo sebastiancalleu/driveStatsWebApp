@@ -13,13 +13,13 @@
     <div class="sidebar">
         <div class="sidebar__actions">
             <div class="add_data action__button" @click="renderComponent('AddData')">
-                <h3>Add data</h3>
+                <font-awesome-icon class="sidebar__icon" icon="plus" />
             </div>
             <div class="vehicles action__button" @click="renderComponent('Vehicles')">
-                <h3>My vehicles</h3>
+                <font-awesome-icon class="sidebar__icon" icon="car-side" />
             </div>
             <div class="statistics action__button" @click="renderComponent('Statistics')">
-                <h3>My statistics</h3>
+                <font-awesome-icon class="sidebar__icon" icon="chart-simple" />
             </div>
         </div>
     </div>
@@ -28,8 +28,8 @@
 .sidebar {
     display: flex;
     flex-direction: column;
-    min-width: 20vw;
-    height: 100%;
+    min-width: 10vw;
+    height: calc(100vh - 48px);
     border-right: 1px solid lightgray;
     .sidebar__actions {
         display: flex;
@@ -43,9 +43,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 6rem;
+            height: 5rem;
             border-bottom: 1px solid lightgray;
             cursor: pointer;
+            .sidebar__icon {
+                height: 40px;
+            }
         }
     }
 }

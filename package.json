@@ -6,11 +6,16 @@
     "build": "vite build",
     "test:unit": "vitest",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "dev": "vite --host",
+    "dev": "vite",
     "format": "prettier --write src/",
     "preview": "vite preview "
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-brands-svg-icons": "^6.5.2",
+    "@fortawesome/free-regular-svg-icons": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/vue-fontawesome": "^3.0.6",
     "axios": "^1.5.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.3.1",
@@ -22,6 +27,7 @@
     "register-service-worker": "^1.7.2",
     "sass": "^1.69.3",
     "sass-loader": "^13.3.2",
+    "uid": "^2.0.2",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },

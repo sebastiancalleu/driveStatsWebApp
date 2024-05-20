@@ -32,14 +32,17 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: rgb(0, 128, 255);
-    height: 4rem;
+    background-color: #005BCF;
+    height: 3rem;
     color: white;
     .header__title {
-        font-size: 40px;
+        font-size: 25px;
         font-weight: 700;
+        margin-left: 1rem;
     }
     .header__username {
+        font-size: 20px;
+        font-weight: 400;
         margin-left: auto;
         margin-right: 2rem;
     }
