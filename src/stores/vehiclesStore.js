@@ -17,8 +17,19 @@ export const useVehiclesStore = defineStore('vehicles', {
     getVehicle: (state) => (uvid) => state.vehicles.find((vehicle) => vehicle.uvid === uvid),
   },
   actions: {
-    getVehicles() {
+    async getVehicles() {
+      const globalStore = useGlobalStore();
 
+      const { data } = await axios.get(`api/vehicle/getVehicles`, {
+        headers: {
+          Authorization: localStorage.getItem('DSauthToken'),
+          uid: globalStore.uid
+        },
+      })
+
+      if(data.vehiclesData) {
+        this.vehicles = data.vehiclesData;
+      }
     },
     async addVehicle(vehicleData) {
       const globalStore = useGlobalStore();
@@ -36,9 +47,7 @@ export const useVehiclesStore = defineStore('vehicles', {
       })
 
       if (data.status === 'success') {
-        const payload = await jose.decodeJwt(data.token)
-        this.setUserInfo(payload.username, payload.uid, payload.email);
-        this.$router.push('/Dashboard');
+        this.vehicles.push(data.vehicleData);
       }
     },
     updateVehicle() {

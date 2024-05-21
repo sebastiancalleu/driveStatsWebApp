@@ -16,28 +16,45 @@
     data() {
         return {
             signView: 'SignIn',
-            username: null,
-            password: null,
+            loading: true
         }
     },
-    async mounted() {
+    async created() {
         this.validateSession();
+
+        const result = await getRedirectResult(auth);
+        if (result) {
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            this.loginUserProvider(credential.idToken, result.user.uid);
+        }
+        setTimeout(() => {
+            this.loading = false
+        }, 1000)
     },
     methods: {
-        validateSession() {
-            const authToken = sessionStorage.getItem('DSauthToken')
+        async validateSession() {
+            const authToken = localStorage.getItem('DSauthToken')
+            if (authToken) {
+                const validationResult = await this.validateUser(authToken);
+                if (validationResult === 'success') {
+                    this.$router.push('/Dashboard')
+                }
+            }
         },
         setLoginView(view) {
             this.signView = view;
         },
-        ...mapActions(useGlobalStore, ['setUsername'])
+        ...mapActions(useGlobalStore, ['setUsername', 'validateUser', 'loginUserProvider'])
     },
 }
 </script>
 
 <template>
     <div class="login">
-        <div class="login__card">
+        <div v-if="loading" class="login__spinner">
+            <span class="loader"></span>
+        </div>
+        <div v-else class="login__card">
             <div class="login__message">
                 <div class="login__logo">
                     <h4 class="login__header">DriveStats<sup>®</sup></h4>
@@ -143,6 +160,48 @@
 
                 }
             }
+        }
+        .login__spinner {
+            border-radius: 30px;
+            height: 40rem;
+            width: 60rem;
+            background-color: rgb(255 255 255 / 0.1);
+            backdrop-filter: blur(20px);
+            background-blend-mode: overlay;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .loader {
+                width: 88px;
+                height: 88px;
+                border-radius: 50%;
+                display: inline-block;
+                border-top: 4px solid #FFF;
+                border-right: 4px solid transparent;
+                box-sizing: border-box;
+                animation: rotation 1s linear infinite;
+            }
+            .loader::after {
+                content: '';  
+                box-sizing: border-box;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 88px;
+                height: 88px;
+                border-radius: 50%;
+                border-left: 4px solid #FF3D00;
+                border-bottom: 4px solid transparent;
+                animation: rotation 0.5s linear infinite reverse;
+            }
+            @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+            } 
         }
     }
 </style>

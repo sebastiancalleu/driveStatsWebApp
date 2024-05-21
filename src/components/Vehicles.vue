@@ -12,10 +12,11 @@
                 formActive: false,
                 vehicleSelected: null,
                 vehicleFormData: {
-                    brand: 'toyota',
-                    model: 'lc200',
-                    year: '2024',
-                }
+                    brand: null,
+                    model: null,
+                    year: null,
+                },
+                registrationDataValidationError: null,
             }
         },
         computed: {
@@ -27,13 +28,31 @@
                 this.vehicleSelected = null;
             },
             sendVehicleData() {
-                this.addVehicle(this.vehicleFormData)
+                if (this.validateRegistrationData()) {
+                    this.addVehicle(this.vehicleFormData)
+                } else {
+                    this.registrationDataValidationError = 'All registration fields should be filled'
+                }
+            },
+            validateRegistrationData() {
+                const {
+                    brand, model, year
+                } = this.vehicleFormData
+                return (brand && model && year);
             },
             selectVehicle(uvid) {
                 this.formActive = false;
                 this.vehicleSelected = uvid;
             },
             ...mapActions(useVehiclesStore, ['addVehicle'])
+        },
+        watch: {
+            vehicleFormData: {
+                deep: true,
+                handler() {
+                    this.registrationDataValidationError = null;
+                }
+            },
         }
     }
 </script>
@@ -54,7 +73,22 @@
             </div>
             <div v-if="formActive" class="vehicle__form">
                 <h1>Vehicle Registration</h1>
-                <button @click="sendVehicleData">Register car</button>
+                <div class="vehicle__input">
+                    <div class="input__label">Brand</div>
+                    <input class="input__field" type="text" v-model="vehicleFormData.brand">
+                </div>
+                <div class="vehicle__input">
+                    <div class="input__label">Model</div>
+                    <input class="input__field" type="text" v-model="vehicleFormData.model">
+                </div>
+                <div class="vehicle__input">
+                    <div class="input__label">Year</div>
+                    <input class="input__field" type="text" v-model="vehicleFormData.year">
+                </div>
+                <button class="register__button" @click="sendVehicleData">Register Vehicle</button>
+                <div v-if="registrationDataValidationError" class="validation__error">
+                    <h3>{{ registrationDataValidationError }}</h3>
+                </div>
             </div>
             <div v-else class="vehicle__data">
                 <h1>{{ vehicleSelected }}</h1>
@@ -71,10 +105,13 @@
             padding: 0 2rem;
             .vehicles__display {
                 display: flex;
+                overflow-x: auto;
+                max-width: calc(100vw - 280px);
                 .add__buton {
                     border: 1px solid lightgray;
                     border-radius: 10px;
                     height: 10rem;
+                    margin: 1rem;
                     margin-left: 2rem;
                     width: 10rem;
                     font-size: 30px;
@@ -82,11 +119,42 @@
                     background-color: transparent;
                     cursor: pointer;
                     &:hover {
-                        background-color: #EEEEEE;
+                        background-color: #F6F6F6;
                     }
                     &:active {
                         font-size: 35px;
                     }
+                }
+            }
+            .vehicle__form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .vehicle__input {
+                    display: flex;
+                    margin-bottom: 2rem;
+                    align-items: center;
+                    .input__label {
+                        width: 4rem;
+                        margin-right: 1rem;
+                    }
+                    .input__field {
+                        border: 1px solid lightgray;
+                        border-radius: 2px;
+                        height: 1.5rem;
+                    }
+                }
+                .register__button {
+                    height: 2rem;
+                    width: 10rem;
+                    background-color: #005BCF;
+                    color: white;
+                    font-weight: bold;
+                    border: 1.5px solid lightgray;
+                    border-radius: 10px;
+                }
+                .validation__error {
+                    color: red;
                 }
             }
         }

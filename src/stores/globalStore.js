@@ -72,7 +72,7 @@ export const useGlobalStore = defineStore('global', {
         });
 
         if (data.token) {
-          localStorage.setItem('DSauthToken', data.token);
+          localStorage.setItem('DSauthToken', token);
         }
         
         if (data.status === 'success') {
@@ -85,6 +85,28 @@ export const useGlobalStore = defineStore('global', {
       } catch (error) {
         return 'failed';
       }
+    },
+    async validateUser(token) {
+      try {      
+        const { data } = await axios.get(`api/user/validateUser`, {
+          headers: {
+            Authorization: token,
+          }
+        });
+        
+        if (data.status === 'success') {
+          const payload = await jose.decodeJwt(data.token)
+          this.setUserInfo(payload.username, payload.uid, payload.email);
+        }
+  
+        return data.status;
+      } catch (error) {
+        return 'failed';
+      }
+    },
+    logoutUser() {
+      localStorage.removeItem('DSauthToken')
+      this.$router.push('/');
     }
   },
   persist: true,

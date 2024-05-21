@@ -35,6 +35,7 @@
         border-radius: 10px;
         width: 20rem;
         height: 10rem;
+        margin: 1rem;
         .card__header {
             margin-left: 2rem;
             font-size: 20px;

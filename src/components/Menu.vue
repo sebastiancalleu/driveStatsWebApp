@@ -1,10 +1,16 @@
 <script>
+import { mapActions } from 'pinia';
+import { useGlobalStore } from '../stores/globalStore';
+
     export default {
     data() {
         return {
             navOpen: false,
         }
     },
+	methods: {
+		...mapActions(useGlobalStore, ['logoutUser'])
+	}
 }
 </script>
 
@@ -21,7 +27,7 @@
           <ul class="sidemenu__list">
             <li class="sidemenu__item"><a href="">Settings</a></li>
             <li class="sidemenu__item"><a href="">About</a></li>
-            <li class="sidemenu__item"><a href="">Logout</a></li>
+            <li class="sidemenu__item"><a href="" @click="logoutUser">Logout</a></li>
           </ul>
         </div>
       </nav>
@@ -58,7 +64,7 @@
 			span {
 				display: block;
 				width: 18px;
-				height: 3px;
+				height: 2px;
 				margin: auto;
 				background: rgb(0, 128, 255);
 				position: absolute;
@@ -69,11 +75,11 @@
 				transition: all .4s ease;
 
 				&.top {
-					transform: translateY(-8px);
+					transform: translateY(-6px);
 				}
 
 				&.bottom {
-					transform: translateY(8px);
+					transform: translateY(6px);
 				}
 			}
 			&.active{

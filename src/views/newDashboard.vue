@@ -1,5 +1,5 @@
 <script>
-    import { mapState } from 'pinia';
+    import { mapActions, mapState } from 'pinia';
     import { useGlobalStore } from '../stores/globalStore';
     import { signOut } from 'firebase/auth';
     import { auth } from '../firebase/firebase';
@@ -8,6 +8,7 @@
     import Statistics from '@/components/Statistics.vue'
     import Header from '@/components/Header.vue'
     import Sidebar from '@/components/Sidebar.vue';
+import { useVehiclesStore } from '../stores/vehiclesStore';
 
     export default {
     data() {
@@ -36,7 +37,11 @@
         },
         signOutm() {
             signOut(auth)
-        }
+        },
+        ...mapActions(useVehiclesStore, ['getVehicles'])
+    },
+    async created() {
+        this.getVehicles();
     }
 }
 </script>
