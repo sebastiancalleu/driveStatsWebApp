@@ -17,11 +17,8 @@ import { useVehiclesStore } from '../stores/vehiclesStore';
         }
     },
     components: {
-        AddData,
         Vehicles,
-        Statistics,
         Header,
-        Sidebar
     },
     computed: {
         displayUsername() {
@@ -50,11 +47,8 @@ import { useVehiclesStore } from '../stores/vehiclesStore';
     <div class="dashboard">
         <Header />
         <div class="dashboard__body">
-            <Sidebar @renderComponent="renderComponent"/>
             <div class="body__main">
-                <div  v-if="componentToRender">
-                    <component :is="componentToRender" />
-                </div>
+                <Vehicles />
             </div>
         </div>
     </div>
@@ -64,16 +58,10 @@ import { useVehiclesStore } from '../stores/vehiclesStore';
 .dashboard {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    width: 100vw;
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     .dashboard__body {
         display: flex;
         flex-direction: row;
-        height: 90%;
-        .body__main {
-            width: 100%;
-        }
     }
 }
 

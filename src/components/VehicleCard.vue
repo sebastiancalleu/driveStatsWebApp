@@ -31,11 +31,12 @@
 </template>
 <style scoped lang="scss">
     .vehicle__card {
-        border: 1px solid lightgray;
+        border: 2px solid lightgray;
         border-radius: 10px;
+        height: 7rem;
         width: 20rem;
-        height: 10rem;
-        margin: 1rem;
+        margin: 1rem 1rem 1rem 0;
+        cursor: pointer;
         .card__header {
             margin-left: 2rem;
             font-size: 20px;
@@ -46,6 +47,9 @@
         }
         .card__subheading {
             margin-left: 2rem;
+        }
+        &:hover {
+            background-color: #F6F6F6;
         }
     }
 </style>

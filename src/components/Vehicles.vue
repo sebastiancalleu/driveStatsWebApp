@@ -2,6 +2,8 @@
     import { mapActions, mapState } from 'pinia';
     import VehicleCard from './VehicleCard.vue';
     import { useVehiclesStore } from '../stores/vehiclesStore';
+    import moment from 'moment';
+    import _ from 'lodash';
 
     export default {
         components: {
@@ -10,24 +12,36 @@
         data() {
             return {
                 formActive: false,
-                vehicleSelected: null,
+                selectedVehicleId: null,
                 vehicleFormData: {
                     brand: null,
                     model: null,
                     year: null,
                 },
+                vehicleMileageData: {
+                    date: moment().format("YYYY-MM-DD"),
+                    mileage: null,
+                    mileageUnit: 'km',
+                    gas: null,
+                    gasUnit: 'Gal',
+                    mileageMeasure: 'Abs'
+                },
                 registrationDataValidationError: null,
+                mileageDataValidationError: null,
             }
         },
         computed: {
-            ...mapState(useVehiclesStore, ['vehicles'])
+            selectedVehicle() {
+                return this.getVehicle(this.selectedVehicleId);
+            },
+            ...mapState(useVehiclesStore, ['vehicles', 'getVehicle'])
         },
         methods: {
             registerCar() {
                 this.formActive = true;
-                this.vehicleSelected = null;
+                this.selectedVehicleId = null;
             },
-            sendVehicleData() {
+            sendVehicleRegistrationData() {
                 if (this.validateRegistrationData()) {
                     this.addVehicle(this.vehicleFormData)
                 } else {
@@ -35,16 +49,23 @@
                 }
             },
             validateRegistrationData() {
-                const {
-                    brand, model, year
-                } = this.vehicleFormData
-                return (brand && model && year);
+                return !Object.values(this.vehicleFormData).some((value) => _.isNil(value) || value === '');
+            },
+            sendVehicleMileageData() {
+                if (this.validateMileageData()) {
+                    this.addVehicleMileageData(this.selectedVehicleId, this.vehicleMileageData)
+                } else {
+                    this.mileageDataValidationError = 'All required fields should be filled'
+                }
+            },
+            validateMileageData() {
+                return (this.selectedVehicleId && !Object.values(this.vehicleMileageData).some((value) => _.isNil(value) || value === ''));
             },
             selectVehicle(uvid) {
                 this.formActive = false;
-                this.vehicleSelected = uvid;
+                this.selectedVehicleId = uvid;
             },
-            ...mapActions(useVehiclesStore, ['addVehicle'])
+            ...mapActions(useVehiclesStore, ['addVehicle', 'addVehicleMileageData'])
         },
         watch: {
             vehicleFormData: {
@@ -53,6 +74,12 @@
                     this.registrationDataValidationError = null;
                 }
             },
+            vehicleMileageData: {
+                deep: true,
+                handler() {
+                    this.mileageDataValidationError = null;
+                }
+            }
         }
     }
 </script>
@@ -85,13 +112,56 @@
                     <div class="input__label">Year</div>
                     <input class="input__field" type="text" v-model="vehicleFormData.year">
                 </div>
-                <button class="register__button" @click="sendVehicleData">Register Vehicle</button>
+                <button class="register__button" @click="sendVehicleRegistrationData">Register Vehicle</button>
                 <div v-if="registrationDataValidationError" class="validation__error">
                     <h3>{{ registrationDataValidationError }}</h3>
                 </div>
             </div>
-            <div v-else class="vehicle__data">
-                <h1>{{ vehicleSelected }}</h1>
+            <div v-else-if="selectedVehicleId" class="vehicle__data">
+                <div class="vehicle__information">
+                    <div class="card__header">
+                        <h2 class="header">{{ selectedVehicle?.brand }} {{ selectedVehicle?.model }}</h2>
+                    </div>
+                    <div class="card__subheading">
+                        <h3>{{ selectedVehicle?.year }}</h3>
+                    </div>
+                    <div class="data__input__container">
+                        <div class="vehicle__input">
+                            <div class="input__label">Date</div>
+                            <input class="input__field date" type="date" v-model="vehicleMileageData.date">
+                        </div>
+                        <div class="vehicle__input">
+                            <div class="input__label">Gas</div>
+                            <input class="input__field" type="text" v-model="vehicleMileageData.gas">
+                            <div class="input__companion">Unit</div>
+                            <select class="input__field companion" v-model="vehicleMileageData.gasUnit">
+                                <option value="Gal">Gal</option>
+                                <option value="L">L</option>
+                            </select>
+                        </div>
+                        <div class="vehicle__input">
+                            <div class="input__label">Mileage</div>
+                            <input class="input__field" type="text" v-model="vehicleMileageData.mileage">
+                            <div class="input__companion">Unit</div>
+                            <select class="input__field companion" v-model="vehicleMileageData.mileageUnit">
+                                <option value="km">km</option>
+                                <option value="mi">mi</option>
+                            </select>
+                            <div class="input__companion">Measure</div>
+                            <select class="input__field companion" v-model="vehicleMileageData.mileageMeasure">
+                                <option value="Abs">Abs</option>
+                                <option value="Rel">Rel</option>
+                            </select>
+                        </div>
+                        <button class="register__button" @click="sendVehicleMileageData">Add Data</button>
+                        <div v-if="mileageDataValidationError" class="validation__error">
+                            <h3>{{ mileageDataValidationError }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="vehicle__data__display">
+
+                </div>
             </div>
         </div>
     </div>
@@ -106,13 +176,13 @@
             .vehicles__display {
                 display: flex;
                 overflow-x: auto;
-                max-width: calc(100vw - 280px);
+                scroll-behavior: smooth;
+                max-width: calc(100vw - 64px);
                 .add__buton {
-                    border: 1px solid lightgray;
+                    border: 2px solid lightgray;
                     border-radius: 10px;
-                    height: 10rem;
                     margin: 1rem;
-                    margin-left: 2rem;
+                    height: 7rem;
                     width: 10rem;
                     font-size: 30px;
                     font-weight: 600;
@@ -129,7 +199,6 @@
             .vehicle__form {
                 display: flex;
                 flex-direction: column;
-                align-items: center;
                 .vehicle__input {
                     display: flex;
                     margin-bottom: 2rem;
@@ -155,6 +224,60 @@
                 }
                 .validation__error {
                     color: red;
+                }
+            }
+            .vehicle__data {
+                .vehicle__information {
+                    .data__input__container {
+                        .vehicle__input {
+                            display: flex;
+                            margin-bottom: 2rem;
+                            align-items: center;
+                            .input__label {
+                                width: 4rem;
+                                margin-right: 1rem;
+                            }
+                            .input__companion {
+                                margin: 0 1rem;
+                                &.button {
+                                    height: 2rem;
+                                    width: 4rem;
+                                    background-color: #F2EEEE;
+                                    color: black;
+                                    font-weight: bold;
+                                    border: 1.5px solid lightgray;
+                                    border-radius: 15px;
+                                    cursor: pointer;
+                                }
+                            }
+                            .input__field {
+                                border: 1px solid lightgray;
+                                border-radius: 2px;
+                                height: 1.5rem;
+                                width: 10rem;
+                                &.companion {
+                                    width: auto;
+                                    height: 1.7rem;
+                                }
+                                &.date {
+                                    height: 2rem;
+                                }
+                            }
+                        }
+                        .register__button {
+                            height: 2rem;
+                            width: 6rem;
+                            background-color: #005BCF;
+                            color: white;
+                            font-weight: bold;
+                            border: 1.5px solid lightgray;
+                            border-radius: 10px;
+                            cursor: pointer;
+                        }
+                        .validation__error {
+                            color: red;
+                        }
+                    }
                 }
             }
         }

@@ -50,6 +50,22 @@ export const useVehiclesStore = defineStore('vehicles', {
         this.vehicles.push(data.vehicleData);
       }
     },
+    addVehicleMileageData(vehicleId, mileageData) {
+      const globalStore = useGlobalStore();
+
+      // const { data } = await axios.post(`api/vehicle/addMileage`, {
+      //   headers: {
+      //     Authorization: localStorage.getItem('DSauthToken'),
+      //     uid: globalStore.uid
+      //   },
+      //   mileageData,
+      //   vehicleId
+      // })
+
+      // if (data.status === 'success') {
+      //   this.vehicles.push(data.vehicleData);
+      // }
+    },
     updateVehicle() {
 
     },

@@ -40,9 +40,9 @@ import { useGlobalStore } from '../stores/globalStore';
     margin-right: 1rem;
 	nav {
 		width: 235px;
-		background: rgb(0, 128, 255);
+		background: #535981;
 		position: fixed;
-		top: 3rem;
+		top: 48px;
 		right: 0;
 		z-index: 99;
 
@@ -66,7 +66,7 @@ import { useGlobalStore } from '../stores/globalStore';
 				width: 18px;
 				height: 2px;
 				margin: auto;
-				background: rgb(0, 128, 255);
+				background: #535981;
 				position: absolute;
 				top: 0;
 				bottom: 0;
@@ -97,12 +97,7 @@ import { useGlobalStore } from '../stores/globalStore';
 
 		}
 
-		&__wrapper {
-      padding-top: 5px;
-    }
-
 		&__list {
-			padding-top: 50px;
       list-style:none;
       padding: 0;
       margin: 0;

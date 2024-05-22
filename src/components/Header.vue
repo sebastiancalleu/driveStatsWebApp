@@ -32,7 +32,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: #005BCF;
+    background-color: #535981;
     height: 3rem;
     color: white;
     .header__title {
