@@ -5,14 +5,7 @@ import { useMileageStore } from './mileageStore';
 
 export const useVehiclesStore = defineStore('vehicles', {
   state: () => ({
-    vehicles: [
-      {
-        brand: 'Mazda',
-        model: '3',
-        year: '2023',
-        uvid: '32134316843189431643156',
-      }
-    ]
+    vehicles: []
   }),
   getters: {
     getVehicle: (state) => (uvid) => state.vehicles.find((vehicle) => vehicle.uvid === uvid),
