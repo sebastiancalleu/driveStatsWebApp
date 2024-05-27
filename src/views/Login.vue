@@ -160,6 +160,16 @@
 
                 }
             }
+            @media only screen and (max-width: 900px) {
+                width: 95vw;
+                .login__message {
+                    display: none;
+                }
+                .login__data {
+                    width: 95vw;
+                    border-radius: 30px;
+                }
+            }
         }
         .login__spinner {
             border-radius: 30px;

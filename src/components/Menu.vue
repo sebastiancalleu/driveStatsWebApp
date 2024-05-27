@@ -25,8 +25,6 @@ import { useGlobalStore } from '../stores/globalStore';
       <nav v-show="navOpen">
         <div class="sidemenu__wrapper">
           <ul class="sidemenu__list">
-            <li class="sidemenu__item"><a href="">Settings</a></li>
-            <li class="sidemenu__item"><a href="">About</a></li>
             <li class="sidemenu__item"><a href="" @click="logoutUser">Logout</a></li>
           </ul>
         </div>

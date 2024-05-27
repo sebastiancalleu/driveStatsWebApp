@@ -165,7 +165,9 @@
                                 <option value="km">km</option>
                                 <option value="mi">mi</option>
                             </select>
-                            <div class="input__companion">Measure</div>
+                        </div>
+                        <div class="vehicle__input">
+                            <div class="input__label">Measure</div>
                             <select class="input__field companion" v-model="vehicleMileageData.mileageMeasure">
                                 <option value="Abs">Abs</option>
                                 <option value="Rel">Rel</option>
@@ -218,6 +220,9 @@
                     &:active {
                         font-size: 35px;
                     }
+                }
+                @media only screen and (max-width: 600px) {
+                    max-width: calc(100vw - 2rem);
                 }
             }
             .vehicle__form {
