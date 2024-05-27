@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useGlobalStore } from './globalStore';
+import { useMileageStore } from './mileageStore';
 
 export const useVehiclesStore = defineStore('vehicles', {
   state: () => ({
@@ -19,6 +20,7 @@ export const useVehiclesStore = defineStore('vehicles', {
   actions: {
     async getVehicles() {
       const globalStore = useGlobalStore();
+      const mileageStore = useMileageStore();
 
       const { data } = await axios.get(`api/vehicle/getVehicles`, {
         headers: {
@@ -30,6 +32,8 @@ export const useVehiclesStore = defineStore('vehicles', {
       if(data.vehiclesData) {
         this.vehicles = data.vehiclesData;
       }
+
+      this.vehicles.forEach((vehicle => mileageStore.getMileage(vehicle.uvid)))
     },
     async addVehicle(vehicleData) {
       const globalStore = useGlobalStore();
@@ -50,21 +54,21 @@ export const useVehiclesStore = defineStore('vehicles', {
         this.vehicles.push(data.vehicleData);
       }
     },
-    addVehicleMileageData(vehicleId, mileageData) {
+    async addVehicleMileageData(vehicleId, mileageData) {
       const globalStore = useGlobalStore();
 
-      // const { data } = await axios.post(`api/vehicle/addMileage`, {
-      //   headers: {
-      //     Authorization: localStorage.getItem('DSauthToken'),
-      //     uid: globalStore.uid
-      //   },
-      //   mileageData,
-      //   vehicleId
-      // })
+      const { data } = await axios.post(`api/vehicle/addMileage`, {
+        headers: {
+          Authorization: localStorage.getItem('DSauthToken'),
+          uid: globalStore.uid
+        },
+        mileageData,
+        vehicleId
+      })
 
-      // if (data.status === 'success') {
-      //   this.vehicles.push(data.vehicleData);
-      // }
+      if (data.status === 'success') {
+        this.vehicles.push(data.vehicleData);
+      }
     },
     updateVehicle() {
 

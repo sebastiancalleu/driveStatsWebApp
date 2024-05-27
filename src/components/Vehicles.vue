@@ -1,13 +1,16 @@
 <script>
     import { mapActions, mapState } from 'pinia';
     import VehicleCard from './VehicleCard.vue';
+    import mileageChart from './mileageChart.vue';
     import { useVehiclesStore } from '../stores/vehiclesStore';
+    import { useMileageStore } from '../stores/mileageStore'
     import moment from 'moment';
     import _ from 'lodash';
 
     export default {
         components: {
             VehicleCard,
+            mileageChart
         },
         data() {
             return {
@@ -34,7 +37,15 @@
             selectedVehicle() {
                 return this.getVehicle(this.selectedVehicleId);
             },
-            ...mapState(useVehiclesStore, ['vehicles', 'getVehicle'])
+            vehicleMileage() {
+                if (this.selectedVehicleId) {
+                    return this.getVehicleMileage(this.selectedVehicleId)
+                } else {
+                    return false
+                }
+            },
+            ...mapState(useVehiclesStore, ['vehicles', 'getVehicle']),
+            ...mapState(useMileageStore, ['getVehicleMileage'])
         },
         methods: {
             registerCar() {
@@ -53,7 +64,7 @@
             },
             sendVehicleMileageData() {
                 if (this.validateMileageData()) {
-                    this.addVehicleMileageData(this.selectedVehicleId, this.vehicleMileageData)
+                    this.addMileageData(this.selectedVehicleId, this.vehicleMileageData)
                 } else {
                     this.mileageDataValidationError = 'All required fields should be filled'
                 }
@@ -65,7 +76,14 @@
                 this.formActive = false;
                 this.selectedVehicleId = uvid;
             },
-            ...mapActions(useVehiclesStore, ['addVehicle', 'addVehicleMileageData'])
+            formatDataToDisplay(field) {
+                return this.vehicleMileage.map((mileageRegister) => mileageRegister[field])
+            },
+            formatLabelsToDisplay() {
+                return this.vehicleMileage.map((mileageRegister) => moment(mileageRegister.date).format('MMM-DD'))
+            },
+            ...mapActions(useVehiclesStore, ['addVehicle']),
+            ...mapActions(useMileageStore, ['addMileageData'])
         },
         watch: {
             vehicleFormData: {
@@ -132,7 +150,7 @@
                         </div>
                         <div class="vehicle__input">
                             <div class="input__label">Gas</div>
-                            <input class="input__field" type="text" v-model="vehicleMileageData.gas">
+                            <input class="input__field" type="number" v-model="vehicleMileageData.gas">
                             <div class="input__companion">Unit</div>
                             <select class="input__field companion" v-model="vehicleMileageData.gasUnit">
                                 <option value="Gal">Gal</option>
@@ -141,7 +159,7 @@
                         </div>
                         <div class="vehicle__input">
                             <div class="input__label">Mileage</div>
-                            <input class="input__field" type="text" v-model="vehicleMileageData.mileage">
+                            <input class="input__field" type="number" v-model="vehicleMileageData.mileage">
                             <div class="input__companion">Unit</div>
                             <select class="input__field companion" v-model="vehicleMileageData.mileageUnit">
                                 <option value="km">km</option>
@@ -160,7 +178,11 @@
                     </div>
                 </div>
                 <div class="vehicle__data__display">
-
+                    <h2>Data Charts</h2>
+                    <div v-if="vehicleMileage" class="charts__container">
+                        <mileageChart chartTitle="Mileage" :values="formatDataToDisplay('mileage')" :labels="formatLabelsToDisplay()" :key="vehicleMileage"/>
+                        <mileageChart chartTitle="Gas" :values="formatDataToDisplay('gas')" :labels="formatLabelsToDisplay()" :key="vehicleMileage"/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -168,11 +190,13 @@
 </template>
 <style scoped lang="scss">
     .vehicles {
+        width: 100vw;
+        padding-bottom: 3rem;
         .section__header {
-            margin-left: 2rem;
+            margin-left: 1rem;
         }
         .section__body {
-            padding: 0 2rem;
+            padding: 0 1rem;
             .vehicles__display {
                 display: flex;
                 overflow-x: auto;
@@ -276,6 +300,23 @@
                         }
                         .validation__error {
                             color: red;
+                        }
+                    }
+                }
+                .vehicle__data__display {
+                    margin: 1rem 0rem;
+                    padding: 1rem 3rem;
+                    background-color: #F3F2F2;
+                    border-radius: 20px;
+                    @media only screen and (max-width: 600px) {
+                        padding: 1rem 1rem;
+                    }
+                    .charts__container {
+                        display: flex;
+                        justify-content: space-between;
+                        @media only screen and (max-width: 900px) {
+                            display: flex;
+                            flex-direction: column;
                         }
                     }
                 }
