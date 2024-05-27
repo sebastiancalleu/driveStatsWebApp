@@ -1,1 +1,5 @@
-{ "routes": [{ "src": "/api", "dest": "https://drivestats.onrender.com", "status": 200 }] }
+{
+    "rewrites": [
+        { "source": "/api/:path(.*)", "destination": "https://drivestats.onrender.com/:path" }
+    ]
+}
