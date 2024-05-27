@@ -1,1 +1,1 @@
-{ "routes": [{ "src": "/[^.]+", "dest": "https://drivestats.onrender.com", "status": 200 }] }
+{ "routes": [{ "src": "/api", "dest": "https://drivestats.onrender.com", "status": 200 }] }
