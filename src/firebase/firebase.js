@@ -9,7 +9,7 @@ import { getAuth } from "firebase/auth";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBikjiAsR1Achkfm5T0-DlQ6cQx156L_O4",
-  authDomain: "drivestats-86200.firebaseapp.com",
+  authDomain: "https://drive-stats-web-app.vercel.app",
   projectId: "drivestats-86200",
   storageBucket: "drivestats-86200.appspot.com",
   messagingSenderId: "349946811475",
