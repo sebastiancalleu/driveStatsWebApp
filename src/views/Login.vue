@@ -25,7 +25,7 @@
         const result = await getRedirectResult(auth);
         if (result) {
             const credential = GoogleAuthProvider.credentialFromResult(result);
-            this.loginUserProvider(credential.idToken, result.user.uid);
+            await this.loginUserProvider(credential.idToken, result.user.uid);
         }
         setTimeout(() => {
             this.loading = false
@@ -92,7 +92,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: radial-gradient(circle, rgba(0,0,0,0.01) 0%, rgba(255,255,255,0.1) 80%), url('../assets/images/image.png');
+        background-color: #535981;
         background-size: cover;
         filter: grayscale(10%);
         height: 100vh;
@@ -103,12 +103,13 @@
             display: flex;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             .login__message {
+                background-color: rgb(255 255 255 / 0.15);
+                backdrop-filter: blur(20px);
+                background-blend-mode: overlay;
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;
                 padding: 3rem;
-                background: url('../assets/images/colorfull-wallpaper.png');
-                background-size: cover;
                 flex: 1;
                 border-radius: 30px 0px 0px 30px;
                 .welcome__mesagge {
@@ -132,7 +133,7 @@
                 }
             }
             .login__data {
-                background-color: rgb(255 255 255 / 0.1);
+                background-color: rgb(255 255 255 / 0.15);
                 backdrop-filter: blur(20px);
                 background-blend-mode: overlay;
                 border-radius: 0px 30px 30px 0px;
@@ -200,7 +201,7 @@
                 width: 88px;
                 height: 88px;
                 border-radius: 50%;
-                border-left: 4px solid #FF3D00;
+                border-left: 4px solid #535981;
                 border-bottom: 4px solid transparent;
                 animation: rotation 0.5s linear infinite reverse;
             }

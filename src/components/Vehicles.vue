@@ -54,7 +54,12 @@
             },
             sendVehicleRegistrationData() {
                 if (this.validateRegistrationData()) {
-                    this.addVehicle(this.vehicleFormData)
+                    this.addVehicle(this.vehicleFormData);
+                    this.vehicleFormData =  {
+                        brand: null,
+                        model: null,
+                        year: null,
+                    };
                 } else {
                     this.registrationDataValidationError = 'All registration fields should be filled'
                 }
@@ -64,7 +69,15 @@
             },
             sendVehicleMileageData() {
                 if (this.validateMileageData()) {
-                    this.addMileageData(this.selectedVehicleId, this.vehicleMileageData)
+                    this.addMileageData(this.selectedVehicleId, this.vehicleMileageData);
+                    this.vehicleMileageData = {
+                        date: moment().format("YYYY-MM-DD"),
+                        mileage: null,
+                        mileageUnit: 'km',
+                        gas: null,
+                        gasUnit: 'Gal',
+                        mileageMeasure: 'Abs'
+                    };
                 } else {
                     this.mileageDataValidationError = 'All required fields should be filled'
                 }
@@ -166,13 +179,6 @@
                                 <option value="mi">mi</option>
                             </select>
                         </div>
-                        <div class="vehicle__input">
-                            <div class="input__label">Measure</div>
-                            <select class="input__field companion" v-model="vehicleMileageData.mileageMeasure">
-                                <option value="Abs">Abs</option>
-                                <option value="Rel">Rel</option>
-                            </select>
-                        </div>
                         <button class="register__button" @click="sendVehicleMileageData">Add Data</button>
                         <div v-if="mileageDataValidationError" class="validation__error">
                             <h3>{{ mileageDataValidationError }}</h3>
@@ -238,18 +244,27 @@
                     }
                     .input__field {
                         border: 1px solid lightgray;
-                        border-radius: 2px;
+                        border-radius: 3px;
                         height: 1.5rem;
+                        &:focus-visible {
+                            outline: none;
+                            border: 2px solid #2C8FFF;
+                            border-radius: 3px;
+                        }
                     }
                 }
                 .register__button {
                     height: 2rem;
                     width: 10rem;
-                    background-color: #005BCF;
+                    background-color: #535981;
                     color: white;
                     font-weight: bold;
                     border: 1.5px solid lightgray;
                     border-radius: 10px;
+                    cursor: pointer;
+                    &:active {
+                        font-size: 12px;
+                    }
                 }
                 .validation__error {
                     color: red;
@@ -284,6 +299,12 @@
                                 border-radius: 2px;
                                 height: 1.5rem;
                                 width: 10rem;
+                                padding-left: .5rem;
+                                &:focus-visible {
+                                    outline: none;
+                                    border: 1px solid #2C8FFF;
+                                    border-radius: 3px;
+                                }
                                 &.companion {
                                     width: auto;
                                     height: 1.7rem;
@@ -295,13 +316,16 @@
                         }
                         .register__button {
                             height: 2rem;
-                            width: 6rem;
-                            background-color: #005BCF;
+                            min-width: 6rem;
+                            background-color: #535981;
                             color: white;
                             font-weight: bold;
                             border: 1.5px solid lightgray;
                             border-radius: 10px;
                             cursor: pointer;
+                            &:active {
+                                font-size: 12px;
+                            }
                         }
                         .validation__error {
                             color: red;

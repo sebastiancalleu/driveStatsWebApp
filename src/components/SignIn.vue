@@ -69,10 +69,14 @@
         <div class="login__submit">
             <button @click="loginEmailAndPassword()">Login</button>
         </div>
-        <h5>Or authenticate using your google account</h5>
-        <div class="login__google__provider">
-            <img class="google__logo" src="../assets/logos/pngwing.com.png" width="30" alt="google-logo" @click="loginWithGoogleProvider()">
+        <div class="social__login__label"><span class="label__text">or</span></div>
+        <div class="login__submit">
+            <button class="google__loging" @click="loginWithGoogleProvider()">
+                <img class="google__logo" src="../assets/logos/pngwing.com.png" width="30" alt="google-logo">
+                &nbsp;Continue with Google
+            </button>
         </div>
+
     </div>
 </template>
 <style scoped lang="scss">
@@ -97,24 +101,46 @@
                 font-size: 16px;
                 padding: 12px 10px 12px 10px;
                 margin-bottom: 2rem;
+                &:focus-visible {
+                    outline: none;
+                    border: 2px solid #2C8FFF;
+                    border-radius: 10px;
+                }
+
             }
         }
+        .label__text {
+            font-weight: bold;
+        }
         .login__submit {
+            width: 100%;
             button {
-                background-color: white; /* Green */
-                border: none;
-                border-radius: 30px;
-                color: black;
+                margin: 1rem 0;
+                background-color: #646DAB; /* Green */
+                border: 1px solid darkgray;
+                border-radius: 10px;
+                color: white;
                 padding: 15px 32px;
                 text-align: center;
                 text-decoration: none;
                 display: inline-block;
                 font-size: 16px;
+                font-weight: bold;
+                width: inherit;
+                max-height: 3rem;
                 cursor: pointer;
                 &:active {
                     font-size: 12px;
                     padding: 17px 37px;
                 }
+            }
+            .google__loging {
+                background-color: white;
+                color: black;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
             }
         }
         .google__logo {
